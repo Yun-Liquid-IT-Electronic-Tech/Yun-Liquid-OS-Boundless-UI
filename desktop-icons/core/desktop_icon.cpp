@@ -275,4 +275,16 @@ public:
                     triggerSelectionChangedEvent();
                 }
                 break;
-            case
+            case 46: // Delete (删除选中图标)
+                deleteSelectedIcons();
+                break;
+            default:
+                break;
+        }
+    }
+    
+    void addEventListener(std::function<void(const DesktopIconEvent&)> callback) {
+        event_listeners_.push_back(callback);
+    }
+    
+    bool saveLayout(const std::string& config_path) {
