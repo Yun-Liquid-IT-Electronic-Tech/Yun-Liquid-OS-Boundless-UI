@@ -464,4 +464,17 @@ private:
         }
     }
     
-    void handleRightClickEvent(const Desktop
+    void handleRightClickEvent(const DesktopIconEvent& event) {
+        DesktopIconEvent context_event(DesktopIconEvent::Type::ContextMenu);
+        context_event.icon = event.icon;
+        context_event.position = event.position;
+        notifyEventListeners(context_event);
+    }
+    
+    void handleDragStartEvent(const DesktopIconEvent& event) {
+        if (event.icon) {
+            is_dragging_ = true;
+            dragging_icon_ = event.icon;
+            drag_start_pos_ = event.position;
+            
+            DesktopIconEvent drag
