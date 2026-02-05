@@ -612,4 +612,33 @@ public:
         
         // 验证字体大小
         if (settings.font.size < 8 || settings.font.size > 72) {
-            return "字体大小必须在
+            return "字体大小必须在8-72之间";
+        }
+        
+        // 验证字体权重
+        if (settings.font.weight < 100 || settings.font.weight > 900) {
+            return "字体权重必须在100-900之间";
+        }
+        
+        // 验证图标尺寸
+        if (settings.icons.size_small < 8 || settings.icons.size_small > 64) {
+            return "小图标尺寸必须在8-64之间";
+        }
+        if (settings.icons.size_medium < 16 || settings.icons.size_medium > 128) {
+            return "中图标尺寸必须在16-128之间";
+        }
+        if (settings.icons.size_large < 32 || settings.icons.size_large > 256) {
+            return "大图标尺寸必须在32-256之间";
+        }
+        
+        // 验证窗口装饰
+        if (settings.window.border_width < 0 || settings.window.border_width > 10) {
+            return "边框宽度必须在0-10之间";
+        }
+        if (settings.window.title_bar_height < 20 || settings.window.title_bar_height > 60) {
+            return "标题栏高度必须在20-60之间";
+        }
+        if (settings.window.corner_radius < 0 || settings.window.corner_radius > 20) {
+            return "圆角半径必须在0-20之间";
+        }
+        if (settings.window.shadow_blur < 0 || settings.window.shadow_blur >
