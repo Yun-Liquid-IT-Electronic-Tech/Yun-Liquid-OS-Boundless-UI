@@ -288,3 +288,6 @@ public:
     }
     
     bool saveLayout(const std::string& config_path) {
+        try {
+            Json::Value root;
+            Json::Value icons_array(Json::array
