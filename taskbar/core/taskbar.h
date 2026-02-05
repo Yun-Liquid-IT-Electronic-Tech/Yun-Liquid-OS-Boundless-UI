@@ -97,3 +97,5 @@ struct SystemTrayItem {
     std::string name;            ///< 显示名称
     std::string icon_path;        ///< 图标路径
     std::string tooltip;          ///< 工具提示
+    bool visible;                 ///< 是否可见
+    bool active;                  ///< 是否激活状态
