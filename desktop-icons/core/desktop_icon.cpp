@@ -477,4 +477,5 @@ private:
             dragging_icon_ = event.icon;
             drag_start_pos_ = event.position;
             
-            DesktopIconEvent drag
+            DesktopIconEvent drag_event(DesktopIconEvent::Type::DragStart);
+            drag_event.icon = event.icon
