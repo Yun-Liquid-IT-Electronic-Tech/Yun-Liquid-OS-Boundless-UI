@@ -104,4 +104,11 @@ struct SystemTrayItem {
 };
 
 /**
- * @struct
+ * @struct ClockFormat
+ * @brief 时钟格式设置
+ */
+struct ClockFormat {
+    bool show_date;               ///< 是否显示日期
+    bool show_seconds;            ///< 是否显示秒数
+    std::string time_format;      ///< 时间格式
+    std
