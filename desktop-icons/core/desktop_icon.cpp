@@ -488,3 +488,8 @@ private:
         if (is_dragging_ && dragging_icon_) {
             DesktopIconEvent drag_event(DesktopIconEvent::Type::DragMove);
             drag_event.icon = dragging_icon_;
+            drag_event.position = event.position;
+            notifyEventListeners(drag_event);
+        }
+    }
+    
