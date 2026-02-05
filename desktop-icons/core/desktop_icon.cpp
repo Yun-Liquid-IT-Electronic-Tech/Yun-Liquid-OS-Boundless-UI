@@ -486,4 +486,5 @@ private:
     
     void handleDragMoveEvent(const DesktopIconEvent& event) {
         if (is_dragging_ && dragging_icon_) {
-            DesktopIconEvent drag_event(DesktopIcon
+            DesktopIconEvent drag_event(DesktopIconEvent::Type::DragMove);
+            drag_event.icon = dragging_icon_;
