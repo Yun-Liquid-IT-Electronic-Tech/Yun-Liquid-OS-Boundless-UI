@@ -481,3 +481,9 @@ private:
             drag_event.icon = event.icon;
             drag_event.position = event.position;
             notifyEventListeners(drag_event);
+        }
+    }
+    
+    void handleDragMoveEvent(const DesktopIconEvent& event) {
+        if (is_dragging_ && dragging_icon_) {
+            DesktopIconEvent drag_event(DesktopIcon
