@@ -290,4 +290,6 @@ public:
     bool saveLayout(const std::string& config_path) {
         try {
             Json::Value root;
-            Json::Value icons_array(Json::array
+            Json::Value icons_array(Json::arrayValue);
+            
+            for (const auto& icon : icons_) {
