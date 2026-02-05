@@ -605,4 +605,11 @@ void DesktopIconManager::setIconSize(IconSize size) {
 }
 
 void DesktopIconManager::autoArrangeIcons() {
-    impl_->autoArrangeIcons
+    impl_->autoArrangeIcons();
+}
+
+void DesktopIconManager::refreshDesktop() {
+    impl_->refreshDesktop();
+}
+
+void DesktopIconManager::handleMouseEvent(const DesktopIconEvent&
