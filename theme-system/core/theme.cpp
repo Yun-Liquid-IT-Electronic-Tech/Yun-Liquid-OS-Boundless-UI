@@ -646,4 +646,7 @@ public:
         }
         
         // 验证动画设置
-        if (settings.animation.duration < 0 || settings.animation.duration
+        if (settings.animation.duration < 0 || settings.animation.duration > 2000) {
+            return "动画时长必须在0-2000毫秒之间";
+        }
+        if (
