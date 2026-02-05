@@ -601,4 +601,8 @@ void DesktopIconManager::setArrangement(IconArrangement arrangement) {
 }
 
 void DesktopIconManager::setIconSize(IconSize size) {
-    impl_->set
+    impl_->setIconSize(size);
+}
+
+void DesktopIconManager::autoArrangeIcons() {
+    impl_->autoArrangeIcons
