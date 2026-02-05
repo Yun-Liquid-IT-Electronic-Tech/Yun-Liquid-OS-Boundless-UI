@@ -493,3 +493,5 @@ private:
         }
     }
     
+    void handleDragEndEvent(const DesktopIconEvent& event) {
+        if (is_dra
