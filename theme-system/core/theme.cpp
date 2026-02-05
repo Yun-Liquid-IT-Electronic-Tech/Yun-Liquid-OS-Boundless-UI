@@ -696,4 +696,182 @@ public:
         return true;
     }
     
-    bool loadConfig(const std::string& config
+    bool loadConfig(const std::string& config_path) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        
+        std::ifstream file(config_path);
+        if (!file.is_open()) {
+            last_error_ = "无法打开文件: " + config_path;
+            return false;
+        }
+        
+        Json::Value root;
+        Json::CharReaderBuilder builder;
+        JSONCPP_STRING errors;
+        
+        if (!Json::parseFromStream(builder, file, &root, &errors)) {
+            last_error_ = "JSON解析错误: " + errors;
+            return false;
+        }
+        
+        if (root.isMember("current_theme")) {
+            std::string theme_name = root["current_theme"].asString();
+            if (themes_.find(theme_name) != themes_.end()) {
+                return applyTheme(theme_name);
+            }
+        }
+        
+        return true;
+    }
+    
+    std::string getLastError() const {
+        return last_error_;
+    }
+    
+    std::string getStatistics() const {
+        std::lock_guard<std::mutex> lock(mutex_);
+        
+        std::stringstream stats;
+        stats << "=== 主题系统统计信息 ===\n";
+        stats << "总主题数量: " << themes_.size() << "\n";
+        stats << "当前主题: " << current_theme_ << "\n";
+        stats << "主题应用次数: " << theme_apply_count_ << "\n";
+        
+        auto now = std::chrono::system_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::hours>(now - last_apply_time_);
+        stats << "上次应用时间: " << duration.count() << " 小时前\n";
+        
+        stats << "事件监听器数量: " << event_listeners_.size() << "\n";
+        
+        return stats.str();
+    }
+    
+    bool resetToDefault() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return applyTheme("浅色主题");
+    }
+
+private:
+    void notifyEventListeners(const ThemeEvent& event) {
+        for (const auto& listener : event_listeners_) {
+            listener(event);
+        }
+    }
+    
+    std::shared_ptr<IThemeRenderer> renderer_;
+    std::map<std::string, ThemeSettings> themes_;
+    std::string current_theme_;
+    std::vector<std::function<void(const ThemeEvent&)>> event_listeners_;
+    mutable std::mutex mutex_;
+    std::string last_error_;
+    int theme_apply_count_;
+    std::chrono::system_clock::time_point last_apply_time_;
+};
+
+// ThemeManager 实现
+ThemeManager::ThemeManager() : impl_(std::make_unique<Impl>()) {}
+
+ThemeManager::~ThemeManager() = default;
+
+bool ThemeManager::initialize(std::shared_ptr<IThemeRenderer> renderer) {
+    return impl_->initialize(renderer);
+}
+
+bool ThemeManager::loadDefaultThemes() {
+    return impl_->loadDefaultThemes();
+}
+
+bool ThemeManager::applyTheme(const std::string& theme_name) {
+    return impl_->applyTheme(theme_name);
+}
+
+ThemeSettings ThemeManager::getCurrentTheme() const {
+    return impl_->getCurrentTheme();
+}
+
+std::vector<std::string> ThemeManager::getAvailableThemes() const {
+    return impl_->getAvailableThemes();
+}
+
+ThemeSettings ThemeManager::getTheme(const std::string& theme_name) const {
+    return impl_->getTheme(theme_name);
+}
+
+bool ThemeManager::createCustomTheme(const ThemeSettings& settings) {
+    return impl_->createCustomTheme(settings);
+}
+
+bool ThemeManager::modifyTheme(const std::string& theme_name, const ThemeSettings& new_settings) {
+    return impl_->modifyTheme(theme_name, new_settings);
+}
+
+bool ThemeManager::deleteTheme(const std::string& theme_name) {
+    return impl_->deleteTheme(theme_name);
+}
+
+bool ThemeManager::exportTheme(const std::string& theme_name, const std::string& file_path) {
+    return impl_->exportTheme(theme_name, file_path);
+}
+
+bool ThemeManager::importTheme(const std::string& file_path) {
+    return impl_->importTheme(file_path);
+}
+
+bool ThemeManager::switchThemeType(ThemeType type) {
+    return impl_->switchThemeType(type);
+}
+
+bool ThemeManager::switchColorScheme(ColorScheme scheme) {
+    return impl_->switchColorScheme(scheme);
+}
+
+bool ThemeManager::setFont(const FontSettings& font) {
+    return impl_->setFont(font);
+}
+
+bool ThemeManager::setIconTheme(const IconTheme& icon_theme) {
+    return impl_->setIconTheme(icon_theme);
+}
+
+bool ThemeManager::setWindowDecoration(const WindowDecoration& decoration) {
+    return impl_->setWindowDecoration(decoration);
+}
+
+bool ThemeManager::setAnimation(const AnimationSettings& animation) {
+    return impl_->setAnimation(animation);
+}
+
+std::vector<uint8_t> ThemeManager::generateThemePreview(const std::string& theme_name, int width, int height) {
+    return impl_->generateThemePreview(theme_name, width, height);
+}
+
+std::string ThemeManager::validateThemeSettings(const ThemeSettings& settings) {
+    return impl_->validateThemeSettings(settings);
+}
+
+void ThemeManager::addEventListener(std::function<void(const ThemeEvent&)> callback) {
+    impl_->addEventListener(callback);
+}
+
+bool ThemeManager::saveConfig(const std::string& config_path) {
+    return impl_->saveConfig(config_path);
+}
+
+bool ThemeManager::loadConfig(const std::string& config_path) {
+    return impl_->loadConfig(config_path);
+}
+
+std::string ThemeManager::getLastError() const {
+    return impl_->getLastError();
+}
+
+std::string ThemeManager::getStatistics() const {
+    return impl_->getStatistics();
+}
+
+bool ThemeManager::resetToDefault() {
+    return impl_->resetToDefault();
+}
+
+} // namespace Desktop
+} // namespace CloudFlow
