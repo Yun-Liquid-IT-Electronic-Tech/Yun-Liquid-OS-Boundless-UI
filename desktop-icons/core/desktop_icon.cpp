@@ -254,4 +254,17 @@ public:
                 handleDragStartEvent(event);
                 break;
             case DesktopIconEvent::Type::DragMove:
-                handleDragMove
+                handleDragMoveEvent(event);
+                break;
+            case DesktopIconEvent::Type::DragEnd:
+                handleDragEndEvent(event);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    void handleKeyboardEvent(int key_code, bool ctrl_pressed, bool shift_pressed) {
+        // 处理键盘快捷键
+        switch (key_code) {
+            case
