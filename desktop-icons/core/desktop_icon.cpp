@@ -204,4 +204,29 @@ public:
         for (auto& icon : icons_) {
             if (!icon.visible) continue;
             
-            icon.position
+            icon.position.grid_x = x;
+            icon.position.grid_y = y;
+            icon.position.pixel_x = x * grid_size_;
+            icon.position.pixel_y = y * grid_size_;
+            
+            x++;
+            if (x >= max_icons_per_row) {
+                x = 0;
+                y++;
+            }
+        }
+        
+        triggerRefreshEvent();
+    }
+    
+    void refreshDesktop() {
+        if (renderer_) {
+            // 渲染所有图标
+            for (const auto& icon : icons_) {
+                if (icon.visible) {
+                    renderer_->renderIcon(icon, icon_size_);
+                    renderer_->renderIconLabel(icon);
+                }
+            }
+            
+            //
