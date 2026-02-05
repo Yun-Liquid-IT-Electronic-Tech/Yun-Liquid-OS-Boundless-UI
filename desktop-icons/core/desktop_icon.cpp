@@ -192,4 +192,16 @@ public:
             case IconSize::Small: grid_size_ = 48; break;
             case IconSize::Medium: grid_size_ = 64; break;
             case IconSize::Large: grid_size_ = 80; break;
-            case IconSize::ExtraLarge: grid_size_ = 96; break
+            case IconSize::ExtraLarge: grid_size_ = 96; break;
+        }
+        triggerRefreshEvent();
+    }
+    
+    void autoArrangeIcons() {
+        int x = 0, y = 0;
+        int max_icons_per_row = 8; // 每行最多图标数
+        
+        for (auto& icon : icons_) {
+            if (!icon.visible) continue;
+            
+            icon.position
