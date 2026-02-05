@@ -99,3 +99,5 @@ struct SystemTrayItem {
     std::string tooltip;          ///< 工具提示
     bool visible;                 ///< 是否可见
     bool active;                  ///< 是否激活状态
+    
+    SystemTrayItem()
