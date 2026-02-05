@@ -267,4 +267,4 @@ public:
     void handleKeyboardEvent(int key_code, bool ctrl_pressed, bool shift_pressed) {
         // 处理键盘快捷键
         switch (key_code) {
-            case
+            case 65: // A (Ctrl+A全选
