@@ -229,4 +229,6 @@ public:
                 }
             }
             
-            //
+            // 渲染选择框
+            for (const auto& icon : icons_) {
+                if (icon
