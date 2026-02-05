@@ -94,4 +94,6 @@ struct QuickLaunchItem {
  */
 struct SystemTrayItem {
     std::string id;               ///< 项目唯一标识
-    std::string name;            ///
+    std::string name;            ///< 显示名称
+    std::string icon_path;        ///< 图标路径
+    std::string tooltip;          ///< 工具提示
