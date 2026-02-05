@@ -100,4 +100,8 @@ struct SystemTrayItem {
     bool visible;                 ///< 是否可见
     bool active;                  ///< 是否激活状态
     
-    SystemTrayItem()
+    SystemTrayItem() : visible(true), active(false) {}
+};
+
+/**
+ * @struct
