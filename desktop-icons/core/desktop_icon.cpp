@@ -544,4 +544,11 @@ private:
     IconSize icon_size_;
     int grid_size_;
     
-    bool is_dragging_
+    bool is_dragging_;
+    DesktopIcon* dragging_icon_;
+    IconPosition drag_start_pos_;
+    
+    std::string last_error_;
+};
+
+// DesktopIcon
