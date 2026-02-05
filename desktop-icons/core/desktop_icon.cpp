@@ -271,3 +271,8 @@ public:
                 if (ctrl_pressed) {
                     for (auto& icon : icons_) {
                         icon.selected = true;
+                    }
+                    triggerSelectionChangedEvent();
+                }
+                break;
+            case
