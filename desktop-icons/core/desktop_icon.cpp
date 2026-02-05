@@ -494,4 +494,54 @@ private:
     }
     
     void handleDragEndEvent(const DesktopIconEvent& event) {
-        if (is_dra
+        if (is_dragging_ && dragging_icon_) {
+            // 计算新的网格位置
+            int new_grid_x = event.position.pixel_x / grid_size_;
+            int new_grid_y = event.position.pixel_y / grid_size_;
+            
+            IconPosition new_pos(new_grid_x, new_grid_y);
+            moveIcon(dragging_icon_->id, new_pos);
+            
+            DesktopIconEvent drag_event(DesktopIconEvent::Type::DragEnd);
+            drag_event.icon = dragging_icon_;
+            drag_event.position = event.position;
+            notifyEventListeners(drag_event);
+            
+            is_dragging_ = false;
+            dragging_icon_ = nullptr;
+        }
+    }
+    
+    void deleteSelectedIcons() {
+        auto selected = getSelectedIcons();
+        for (const auto& icon : selected) {
+            removeIcon(icon.id);
+        }
+    }
+    
+    void triggerRefreshEvent() {
+        DesktopIconEvent event(DesktopIconEvent::Type::SelectionChanged);
+        notifyEventListeners(event);
+    }
+    
+    void triggerSelectionChangedEvent() {
+        DesktopIconEvent event(DesktopIconEvent::Type::SelectionChanged);
+        notifyEventListeners(event);
+    }
+    
+    void notifyEventListeners(const DesktopIconEvent& event) {
+        for (const auto& listener : event_listeners_) {
+            listener(event);
+        }
+    }
+    
+private:
+    std::vector<DesktopIcon> icons_;
+    std::shared_ptr<IDesktopIconRenderer> renderer_;
+    std::vector<std::function<void(const DesktopIconEvent&)>> event_listeners_;
+    
+    IconArrangement arrangement_;
+    IconSize icon_size_;
+    int grid_size_;
+    
+    bool is_dragging_
