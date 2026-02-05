@@ -650,4 +650,50 @@ public:
             return "动画时长必须在0-2000毫秒之间";
         }
         if (settings.animation.easing_factor < 0.1f || settings.animation.easing_factor > 2.0f) {
-            return "缓动因子必须在0.1-2
+            return "缓动因子必须在0.1-2.0之间";
+        }
+        
+        return ""; // 空字符串表示验证通过
+    }
+    
+    void addEventListener(std::function<void(const ThemeEvent&)> callback) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        event_listeners_.push_back(callback);
+    }
+    
+    bool saveConfig(const std::string& config_path) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        
+        Json::Value root;
+        root["current_theme"] = current_theme_;
+        root["theme_apply_count"] = theme_apply_count_;
+        
+        // 保存当前主题设置
+        if (themes_.find(current_theme_) != themes_.end()) {
+            const ThemeSettings& theme = themes_[current_theme_];
+            
+            Json::Value theme_settings;
+            theme_settings["name"] = theme.name;
+            theme_settings["type"] = static_cast<int>(theme.type);
+            theme_settings["scheme"] = static_cast<int>(theme.scheme);
+            
+            root["current_theme_settings"] = theme_settings;
+        }
+        
+        // 写入文件
+        std::ofstream file(config_path);
+        if (!file.is_open()) {
+            last_error_ = "无法打开文件: " + config_path;
+            return false;
+        }
+        
+        Json::StreamWriterBuilder builder;
+        builder["indentation"] = "  ";
+        std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+        writer->write(root, &file);
+        
+        file.close();
+        return true;
+    }
+    
+    bool loadConfig(const std::string& config
