@@ -649,4 +649,5 @@ public:
         if (settings.animation.duration < 0 || settings.animation.duration > 2000) {
             return "动画时长必须在0-2000毫秒之间";
         }
-        if (
+        if (settings.animation.easing_factor < 0.1f || settings.animation.easing_factor > 2.0f) {
+            return "缓动因子必须在0.1-2
