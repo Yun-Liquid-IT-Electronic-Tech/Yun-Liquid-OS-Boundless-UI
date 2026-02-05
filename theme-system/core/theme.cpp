@@ -641,4 +641,9 @@ public:
         if (settings.window.corner_radius < 0 || settings.window.corner_radius > 20) {
             return "圆角半径必须在0-20之间";
         }
-        if (settings.window.shadow_blur < 0 || settings.window.shadow_blur >
+        if (settings.window.shadow_blur < 0 || settings.window.shadow_blur > 50) {
+            return "阴影模糊半径必须在0-50之间";
+        }
+        
+        // 验证动画设置
+        if (settings.animation.duration < 0 || settings.animation.duration
