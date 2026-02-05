@@ -293,3 +293,175 @@ public:
             Json::Value icons_array(Json::arrayValue);
             
             for (const auto& icon : icons_) {
+                Json::Value icon_obj;
+                icon_obj["id"] = icon.id;
+                icon_obj["name"] = icon.name;
+                icon_obj["icon_path"] = icon.icon_path;
+                icon_obj["type"] = static_cast<int>(icon.type);
+                icon_obj["grid_x"] = icon.position.grid_x;
+                icon_obj["grid_y"] = icon.position.grid_y;
+                icon_obj["visible"] = icon.visible;
+                
+                if (icon.type == IconType::Application) {
+                    icon_obj["executable_path"] = icon.executable_path;
+                } else if (icon.type == IconType::File || icon.type == IconType::Folder) {
+                    icon_obj["file_path"] = icon.file_path;
+                }
+                
+                icons_array.append(icon_obj);
+            }
+            
+            root["icons"] = icons_array;
+            root["arrangement"] = static_cast<int>(arrangement_);
+            root["icon_size"] = static_cast<int>(icon_size_);
+            root["grid_size"] = grid_size_;
+            
+            std::ofstream file(config_path);
+            if (!file.is_open()) {
+                last_error_ = "无法打开配置文件: " + config_path;
+                return false;
+            }
+            
+            file << root;
+            file.close();
+            
+            return true;
+        } catch (const std::exception& e) {
+            last_error_ = std::string("保存布局失败: ") + e.what();
+            return false;
+        }
+    }
+    
+    bool loadLayout(const std::string& config_path) {
+        try {
+            std::ifstream file(config_path);
+            if (!file.is_open()) {
+                last_error_ = "无法打开配置文件: " + config_path;
+                return false;
+            }
+            
+            Json::Value root;
+            file >> root;
+            file.close();
+            
+            // 清空当前图标
+            icons_.clear();
+            
+            // 加载图标配置
+            const Json::Value& icons_array = root["icons"];
+            for (const auto& icon_obj : icons_array) {
+                DesktopIcon icon;
+                icon.id = icon_obj["id"].asString();
+                icon.name = icon_obj["name"].asString();
+                icon.icon_path = icon_obj["icon_path"].asString();
+                icon.type = static_cast<IconType>(icon_obj["type"].asInt());
+                icon.position.grid_x = icon_obj["grid_x"].asInt();
+                icon.position.grid_y = icon_obj["grid_y"].asInt();
+                icon.position.pixel_x = icon.position.grid_x * grid_size_;
+                icon.position.pixel_y = icon.position.grid_y * grid_size_;
+                icon.visible = icon_obj["visible"].asBool();
+                
+                if (icon.type == IconType::Application) {
+                    icon.executable_path = icon_obj["executable_path"].asString();
+                } else if (icon.type == IconType::File || icon.type == IconType::Folder) {
+                    icon.file_path = icon_obj["file_path"].asString();
+                }
+                
+                icons_.push_back(icon);
+            }
+            
+            // 加载其他配置
+            arrangement_ = static_cast<IconArrangement>(root["arrangement"].asInt());
+            icon_size_ = static_cast<IconSize>(root["icon_size"].asInt());
+            grid_size_ = root["grid_size"].asInt();
+            
+            triggerRefreshEvent();
+            return true;
+        } catch (const std::exception& e) {
+            last_error_ = std::string("加载布局失败: ") + e.what();
+            return false;
+        }
+    }
+    
+    std::string getLastError() const {
+        return last_error_;
+    }
+
+private:
+    void createDefaultIcons() {
+        // 创建计算机图标
+        DesktopIcon computer_icon;
+        computer_icon.id = "computer";
+        computer_icon.name = "计算机";
+        computer_icon.icon_path = "/usr/share/icons/computer.png";
+        computer_icon.type = IconType::System;
+        computer_icon.position = IconPosition(0, 0);
+        icons_.push_back(computer_icon);
+        
+        // 创建用户主目录图标
+        DesktopIcon home_icon;
+        home_icon.id = "home";
+        home_icon.name = "主目录";
+        home_icon.icon_path = "/usr/share/icons/home.png";
+        home_icon.type = IconType::Folder;
+        home_icon.file_path = "/home";
+        home_icon.position = IconPosition(1, 0);
+        icons_.push_back(home_icon);
+        
+        // 创建回收站图标
+        DesktopIcon trash_icon;
+        trash_icon.id = "trash";
+        trash_icon.name = "回收站";
+        trash_icon.icon_path = "/usr/share/icons/trash.png";
+        trash_icon.type = IconType::Trash;
+        trash_icon.position = IconPosition(2, 0);
+        icons_.push_back(trash_icon);
+        
+        // 创建网络图标
+        DesktopIcon network_icon;
+        network_icon.id = "network";
+        network_icon.name = "网络";
+        network_icon.icon_path = "/usr/share/icons/network.png";
+        network_icon.type = IconType::Network;
+        network_icon.position = IconPosition(3, 0);
+        icons_.push_back(network_icon);
+    }
+    
+    bool findFreePosition(IconPosition& position) {
+        int max_icons_per_row = 8;
+        
+        for (int y = 0; y < 20; ++y) { // 最多20行
+            for (int x = 0; x < max_icons_per_row; ++x) {
+                IconPosition test_pos(x, y);
+                if (getIconAtPosition(test_pos) == nullptr) {
+                    position = test_pos;
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    void handleClickEvent(const DesktopIconEvent& event) {
+        if (!event.icon) {
+            // 点击空白区域，取消选择
+            clearSelection();
+            return;
+        }
+        
+        // 选择图标
+        selectIcon(event.icon->id, event.ctrl_pressed);
+        
+        // 触发单击事件
+        notifyEventListeners(event);
+    }
+    
+    void handleDoubleClickEvent(const DesktopIconEvent& event) {
+        if (event.icon) {
+            // 触发双击事件
+            notifyEventListeners(event);
+        }
+    }
+    
+    void handleRightClickEvent(const Desktop
