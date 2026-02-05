@@ -612,4 +612,29 @@ void DesktopIconManager::refreshDesktop() {
     impl_->refreshDesktop();
 }
 
-void DesktopIconManager::handleMouseEvent(const DesktopIconEvent&
+void DesktopIconManager::handleMouseEvent(const DesktopIconEvent& event) {
+    impl_->handleMouseEvent(event);
+}
+
+void DesktopIconManager::handleKeyboardEvent(int key_code, bool ctrl_pressed, bool shift_pressed) {
+    impl_->handleKeyboardEvent(key_code, ctrl_pressed, shift_pressed);
+}
+
+void DesktopIconManager::addEventListener(std::function<void(const DesktopIconEvent&)> callback) {
+    impl_->addEventListener(callback);
+}
+
+bool DesktopIconManager::saveLayout(const std::string& config_path) {
+    return impl_->saveLayout(config_path);
+}
+
+bool DesktopIconManager::loadLayout(const std::string& config_path) {
+    return impl_->loadLayout(config_path);
+}
+
+std::string DesktopIconManager::getLastError() const {
+    return impl_->getLastError();
+}
+
+} // namespace Desktop
+} // namespace CloudFlow
