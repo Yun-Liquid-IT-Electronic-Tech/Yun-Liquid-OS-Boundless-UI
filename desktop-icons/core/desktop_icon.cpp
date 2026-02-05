@@ -231,4 +231,18 @@ public:
             
             // 渲染选择框
             for (const auto& icon : icons_) {
-                if (icon
+                if (icon.selected && icon.visible) {
+                    IconPosition size(grid_size_, grid_size_ + 20);
+                    renderer_->renderSelectionBox(icon.position, size);
+                }
+            }
+        }
+    }
+    
+    void handleMouseEvent(const DesktopIconEvent& event) {
+        switch (event.type) {
+            case DesktopIconEvent::Type::Click:
+                handleClickEvent(event);
+                break;
+            case DesktopIconEvent::Type::DoubleClick:
+                handleDoubleClickEvent(event);
