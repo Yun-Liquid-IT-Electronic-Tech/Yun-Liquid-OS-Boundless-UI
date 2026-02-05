@@ -246,3 +246,12 @@ public:
                 break;
             case DesktopIconEvent::Type::DoubleClick:
                 handleDoubleClickEvent(event);
+                break;
+            case DesktopIconEvent::Type::RightClick:
+                handleRightClickEvent(event);
+                break;
+            case DesktopIconEvent::Type::DragStart:
+                handleDragStartEvent(event);
+                break;
+            case DesktopIconEvent::Type::DragMove:
+                handleDragMove
