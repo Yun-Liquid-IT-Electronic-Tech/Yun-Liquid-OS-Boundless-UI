@@ -92,3 +92,6 @@ struct QuickLaunchItem {
  * @struct SystemTrayItem
  * @brief 系统托盘项信息
  */
+struct SystemTrayItem {
+    std::string id;               ///< 项目唯一标识
+    std::string name;            ///
