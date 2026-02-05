@@ -267,4 +267,7 @@ public:
     void handleKeyboardEvent(int key_code, bool ctrl_pressed, bool shift_pressed) {
         // 处理键盘快捷键
         switch (key_code) {
-            case 65: // A (Ctrl+A全选
+            case 65: // A (Ctrl+A全选)
+                if (ctrl_pressed) {
+                    for (auto& icon : icons_) {
+                        icon.selected = true;
