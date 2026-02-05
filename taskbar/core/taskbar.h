@@ -80,3 +80,9 @@ struct TaskbarAppearance {
 struct QuickLaunchItem {
     std::string id;               ///< 项目唯一标识
     std::string name;            ///< 显示名称
+    std::string icon_path;        ///< 图标路径
+    std::string executable_path;  ///< 可执行文件路径
+    std::vector<std::string> arguments; ///< 启动参数
+    int launch_count;            ///< 启动次数（用于排序）
+    
+    QuickLaunchItem() : launch_count(
