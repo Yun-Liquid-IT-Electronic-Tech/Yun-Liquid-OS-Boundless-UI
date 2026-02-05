@@ -85,4 +85,10 @@ struct QuickLaunchItem {
     std::vector<std::string> arguments; ///< 启动参数
     int launch_count;            ///< 启动次数（用于排序）
     
-    QuickLaunchItem() : launch_count(
+    QuickLaunchItem() : launch_count(0) {}
+};
+
+/**
+ * @struct SystemTrayItem
+ * @brief 系统托盘项信息
+ */
