@@ -551,4 +551,54 @@ private:
     std::string last_error_;
 };
 
-// DesktopIcon
+// DesktopIconManager 实现
+DesktopIconManager::DesktopIconManager() : impl_(std::make_unique<Impl>()) {}
+
+DesktopIconManager::~DesktopIconManager() = default;
+
+bool DesktopIconManager::initialize(std::shared_ptr<IDesktopIconRenderer> renderer) {
+    return impl_->initialize(renderer);
+}
+
+bool DesktopIconManager::addIcon(const DesktopIcon& icon) {
+    return impl_->addIcon(icon);
+}
+
+bool DesktopIconManager::removeIcon(const std::string& icon_id) {
+    return impl_->removeIcon(icon_id);
+}
+
+bool DesktopIconManager::moveIcon(const std::string& icon_id, const IconPosition& new_position) {
+    return impl_->moveIcon(icon_id, new_position);
+}
+
+bool DesktopIconManager::selectIcon(const std::string& icon_id, bool multi_select) {
+    return impl_->selectIcon(icon_id, multi_select);
+}
+
+void DesktopIconManager::clearSelection() {
+    impl_->clearSelection();
+}
+
+std::vector<DesktopIcon> DesktopIconManager::getAllIcons() const {
+    return impl_->getAllIcons();
+}
+
+std::vector<DesktopIcon> DesktopIconManager::getSelectedIcons() const {
+    return impl_->getSelectedIcons();
+}
+
+DesktopIcon* DesktopIconManager::getIconAtPosition(const IconPosition& position) {
+    return impl_->getIconAtPosition(position);
+}
+
+DesktopIcon* DesktopIconManager::getIconById(const std::string& icon_id) {
+    return impl_->getIconById(icon_id);
+}
+
+void DesktopIconManager::setArrangement(IconArrangement arrangement) {
+    impl_->setArrangement(arrangement);
+}
+
+void DesktopIconManager::setIconSize(IconSize size) {
+    impl_->set
